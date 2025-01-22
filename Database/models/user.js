@@ -16,7 +16,6 @@ const User = new mongoose.Schema(
       trim: true,
       validate: {
         validator: function (email) {
-          // Regular expression to validate email format
           return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
         },
         message: (props) => `${props.value} is not a valid email format.`,
