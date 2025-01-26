@@ -9,11 +9,10 @@ router.post("/users", async (req, res) => {
     const existingUser = await User.findOne({
       $or: [{ username }, { email }],
     });
-    if (existingUser) {
+    if (existingUser)
       return res.status(400).json({
         message: "Username or email already exists. Please choose another.",
       });
-    }
     const user = new User({ username, email, password });
     await user.save();
     res.status(201).json({
@@ -29,11 +28,10 @@ router.post("/users/:userId/posts", validatePost, async (req, res) => {
     const { userId } = req.params;
     const { title, content } = req.body;
     let user = await User.findOne({ _id: userId, "posts.title": title });
-    if (user) {
+    if (user)
       return res
         .status(400)
         .json({ error: "A post with the same title already exists." });
-    }
     user = await User.findByIdAndUpdate(
       userId,
       { $push: { posts: { title, content } } },
