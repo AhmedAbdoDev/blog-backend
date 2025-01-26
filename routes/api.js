@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const User = require("../Database/models/user");
+const { validatePost } = require("../functions");
 
 router.post("/users", async (req, res) => {
   try {
@@ -23,7 +24,7 @@ router.post("/users", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-router.post("/users/:userId/posts", async (req, res) => {
+router.post("/users/:userId/posts", validatePost, async (req, res) => {
   try {
     const { userId } = req.params;
     const { title, content } = req.body;
