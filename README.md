@@ -138,7 +138,7 @@ A backend API for managing blog posts and comments, built using **Node.js**, **E
    - [] Implement pagination to limit the number of posts returned in the `/users/:userId/posts` endpoint.
 
 4. **Post Validation (Title and Content)**
-   [x] Add validation to ensure post titles are unique and content is not empty or too short.
+   - [x] Add validation to ensure post titles are unique and content is not empty or too short.
 
 5. **Like and Dislike Posts**
    - [] Implement the ability for users to like and dislike posts.
