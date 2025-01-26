@@ -156,16 +156,16 @@ A backend API for managing blog posts and comments, built using **Node.js**, **E
    - Implement a comment moderation system for admin users to approve or reject comments.
 
 10. **Logging and Error Handling**
-   - Improve logging with libraries like `winston` and enhance error handling.
+    - Improve logging with libraries like `winston` and enhance error handling.
 
 11. **Rate Limiting for API Requests**
-   - Implement rate limiting to protect against excessive requests.
+    - Implement rate limiting to protect against excessive requests.
 
 12. **Admin Dashboard for Blog Management**
-   - Build an admin dashboard to manage users, posts, and comments.
+    - Build an admin dashboard to manage users, posts, and comments.
 
 13. **Database Backup System**
-   - Set up an automated backup system for MongoDB to prevent data loss.
+    - Set up an automated backup system for MongoDB to prevent data loss.
 
 ## **Contributing**
 Feel free to fork this repository, create a feature branch, and submit a pull request with your changes.
