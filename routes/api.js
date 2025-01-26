@@ -28,7 +28,13 @@ router.post("/users/:userId/posts", validatePost, async (req, res) => {
   try {
     const { userId } = req.params;
     const { title, content } = req.body;
-    const user = await User.findByIdAndUpdate(
+    let user = await User.findOne({ _id: userId, "posts.title": title });
+    if (user) {
+      return res
+        .status(400)
+        .json({ error: "A post with the same title already exists." });
+    }
+    user = await User.findByIdAndUpdate(
       userId,
       { $push: { posts: { title, content } } },
       { new: true }
