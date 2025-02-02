@@ -6,6 +6,7 @@ A backend API for managing blog posts and comments, built using **Node.js**, **E
 ## Features
 
 - User registration with unique username and email validation.
+- User login with JWT authentication.
 - Add blog posts for specific users.
 - Add comments to posts.
 - Secure password handling with hashing.
@@ -15,7 +16,8 @@ A backend API for managing blog posts and comments, built using **Node.js**, **E
 ## Endpoints
 
 ### 1. **Create a New User**
-- **POST** `/users`
+
+- **Endpoint:** `POST /api/users`
 - **Description**: Register a new user.
 - **Request Body**:
   ```json
@@ -35,10 +37,33 @@ A backend API for managing blog posts and comments, built using **Node.js**, **E
     }
   }
   ```
+### 2. User Login
 
-### 2. **Add a Post**
-- **POST** `/users/:userId/posts`
-- **Description**: Add a post to a specific user.
+- **Endpoint:** `POST /api/login`
+- **Description:** Authenticate a user and retrieve a JWT token.
+- **Request Body:**
+  ```json
+  {
+    "email": "john@example.com",
+    "password": "securepassword"
+  }
+  ```
+- **Response:**
+  ```json
+  {
+    "message": "Login successful",
+    "token": "your_jwt_token"
+  }
+  ```
+
+### 3. Create a New Post
+
+- **Endpoint:** `POST /api/users/:userId/posts`
+- **Description:** Create a new blog post for a specific user. Requires authentication.
+- **Headers:**
+  ```
+  Authorization: Bearer your_jwt_token
+  ```
 - **Request Body**:
   ```json
   {
@@ -51,19 +76,30 @@ A backend API for managing blog posts and comments, built using **Node.js**, **E
   {
     "message": "Post added successfully",
     "user": {
+      "_id": "user_id",
       "username": "john_doe",
-      "posts": [ ... ]
+      "email": "john@example.com",
+      "posts": [
+        {
+          "title": "My First Post",
+          "content": "This is the content of the post."
+        }
+      ]
     }
   }
   ```
 
-### 3. **Add a Comment to a Post**
-- **POST** `/users/:userId/posts/:postId/comments`
-- **Description**: Add a comment to a specific post.
+### 4. **Add a Comment to a Post**
+
+- **Endpoint:** `POST /api/users/:userId/posts/:postId/comments`
+- **Description:** Add a comment to a specific post. Requires authentication.
+- **Headers:**
+  ```
+  Authorization: Bearer your_jwt_token
+  ```
 - **Request Body**:
   ```json
   {
-    "user": "jane_doe",
     "content": "This is a great post!"
   }
   ```
@@ -71,13 +107,28 @@ A backend API for managing blog posts and comments, built using **Node.js**, **E
   ```json
   {
     "message": "Comment added successfully",
-    "user": { ... }
+    "post": {
+      "_id": "post_id",
+      "title": "My First Post",
+      "content": "This is the content of the post.",
+      "comments": [
+        {
+          "content": "This is a great post!",
+          "createdAt": "2025-02-02T15:16:26.000Z"
+        }
+      ]
+    }
   }
   ```
 
-### 4. **Get All Posts**
-- **GET** `/users/:userId/posts`
-- **Description**: Retrieve all posts of a specific user.
+### 5. **Get All Posts**
+
+- **Endpoint:** `GET /api/users/:userId/posts`
+- **Description**: Retrieve all posts of a specific user. Requires authentication.
+- **Headers:**
+  ```
+  Authorization: Bearer your_jwt_token
+  ```
 - **Response**:
   ```json
   {
@@ -109,6 +160,7 @@ A backend API for managing blog posts and comments, built using **Node.js**, **E
    ```
    mongoose=your_mongo_database_uri
    PORT=5000
+   SECRET_KEY="secret_key"
    ```
 
 4. Start the development server:
@@ -116,21 +168,32 @@ A backend API for managing blog posts and comments, built using **Node.js**, **E
    npm start
    ```
 
+## Validation
+
+- **User Registration:**
+  - Username and email must be unique.
+  - Email must be in a valid format.
+  - Password must be at least 6 characters long.
+
+- **Post Creation:**
+  - Title must be unique.
+  - Content must not be empty or too short.
 
 ## Technologies Used
 
-- **Node.js**
-- **Express**
-- **MongoDB**
-- **Mongoose**
-- **bcryptjs** (for password hashing)
-- **express-rate-limit** (for rate limiting for API requests)
+- **Node.js**: JavaScript runtime environment.
+- **Express**: Web framework for Node.js.
+- **MongoDB**: NoSQL database.
+- **Mongoose**: ODM for MongoDB.
+- **bcryptjs**: Password hashing.
+- **JWT**: JSON Web Tokens for authentication.
+- **express-rate-limit**: Middleware to prevent abuse by limiting requests.
 
 
 ## To-Do Tasks for Future Improvements
 
 1. **User Authentication (JWT)**
-   - Implement JWT-based user authentication for secure access to API endpoints.
+   - [x] Implement JWT-based user authentication for secure access to API endpoints.
    
 2. **Password Reset (Forgot Password)**
    - Add functionality for users to reset their passwords using a token sent via email.
