@@ -5,7 +5,7 @@ module.exports = async (req, res, next) => {
   if (!token)
     return res
       .status(401)
-      .json({ message: "Access denied. No token provided." });
+      .json({ message: "Access denied. No token provided.", success: false });
   try {
     const decoded = jwt.verify(
       token.replace("Bearer ", ""),
@@ -14,6 +14,6 @@ module.exports = async (req, res, next) => {
     req.user = decoded;
     next();
   } catch (error) {
-    res.status(400).json({ message: "Invalid token" });
+    res.status(400).json({ message: "Invalid token", success: false });
   }
 };

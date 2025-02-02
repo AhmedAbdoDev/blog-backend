@@ -25,7 +25,7 @@ router.post("/users", async (req, res) => {
       success: true,
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: error.message, success: false });
   }
 });
 
@@ -34,13 +34,15 @@ router.post("/login", async (req, res) => {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
     if (!user || !bcrypt.compareSync(password, user?.password))
-      return res.status(400).json({ message: "Invalid email or password" });
+      return res
+        .status(400)
+        .json({ message: "Invalid email or password", success: false });
     const token = jwt.sign(
       { id: user._id, username: user.username },
       process.env.SECRET_KEY,
       { expiresIn: "1h" }
     );
-    res.json({ message: "Login successful", token });
+    res.json({ message: "Login successful", token, success: true });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -53,22 +55,30 @@ router.post(
     try {
       const { userId } = req.params;
       if (req.user.id !== userId)
-        return res.status(403).json({ message: "Unauthorized" });
+        return res
+          .status(403)
+          .json({ message: "Unauthorized", success: false });
       const { title, content } = req.body;
       let user = await User.findOne({ _id: userId, "posts.title": title });
       if (user)
-        return res
-          .status(400)
-          .json({ error: "A post with the same title already exists." });
+        return res.status(400).json({
+          error: "A post with the same title already exists.",
+          success: false,
+        });
       user = await User.findByIdAndUpdate(
         userId,
         { $push: { posts: { title, content } } },
         { new: true }
       ).select("username posts");
-      if (!user) return res.status(404).json({ message: "User not found" });
-      res.status(201).json({ message: "Post added successfully", user });
+      if (!user)
+        return res
+          .status(404)
+          .json({ message: "User not found", success: false });
+      res
+        .status(201)
+        .json({ message: "Post added successfully", user, success: true });
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      res.status(500).json({ error: error.message, success: false });
     }
   }
 );
@@ -85,12 +95,16 @@ router.post(
         { new: true }
       ).select("username posts");
       if (!updatedUser)
-        return res.status(404).json({ message: "User or Post not found" });
-      res
-        .status(201)
-        .json({ message: "Comment added successfully", updatedUser });
+        return res
+          .status(404)
+          .json({ message: "User or Post not found", success: false });
+      res.status(201).json({
+        message: "Comment added successfully",
+        updatedUser,
+        success: true,
+      });
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      res.status(500).json({ error: error.message, success: false });
     }
   }
 );
@@ -98,10 +112,13 @@ router.get("/users/:userId/posts", authMiddleware, async (req, res) => {
   try {
     const { userId } = req.params;
     const user = await User.findById(userId).select("posts");
-    if (!user) return res.status(404).json({ message: "User not found" });
-    res.status(200).json({ posts: user.posts });
+    if (!user)
+      return res
+        .status(404)
+        .json({ message: "User not found", success: false });
+    res.status(200).json({ posts: user.posts, success: true });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: error.message, success: false });
   }
 });
 module.exports = router;
