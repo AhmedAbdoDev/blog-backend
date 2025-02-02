@@ -124,6 +124,7 @@ A backend API for managing blog posts and comments, built using **Node.js**, **E
 - **MongoDB**
 - **Mongoose**
 - **bcryptjs** (for password hashing)
+- **express-rate-limit** (for rate limiting for API requests)
 
 
 ## To-Do Tasks for Future Improvements
@@ -159,7 +160,7 @@ A backend API for managing blog posts and comments, built using **Node.js**, **E
     - Improve logging with libraries like `winston` and enhance error handling.
 
 11. **Rate Limiting for API Requests**
-    - Implement rate limiting to protect against excessive requests.
+    - [x] Implement rate limiting to protect against excessive requests.
 
 12. **Admin Dashboard for Blog Management**
     - Build an admin dashboard to manage users, posts, and comments.

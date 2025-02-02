@@ -4,7 +4,13 @@ const app = express();
 const bodyParser = require("body-parser");
 const cors = require("cors");
 require("dotenv").config();
-
+const rateLimit = require("express-rate-limit");
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  message: "Too many requests, please try again later.",
+});
+app.use(limiter);
 app.use(bodyParser.json());
 app.use(cors());
 
